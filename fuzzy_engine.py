@@ -35,15 +35,30 @@ def build_fuzzy_system():
 
     # Rules (expanded)
     rules = [
-        ctrl.Rule(demand['high'] & stock['low'], reorder['high']),
-        ctrl.Rule(demand['medium'] & stock['low'], reorder['medium']),
-        ctrl.Rule(demand['low'] & stock['high'], reorder['low']),
-        ctrl.Rule(freshness['spoiling'], adjustment['high']),
-        ctrl.Rule(stock['low'] & demand['high'], adjustment['moderate']),
-        ctrl.Rule(stock['adequate'], adjustment['low']),
-        ctrl.Rule(demand['high'] & freshness['fresh'], reorder['high']),
-        ctrl.Rule(demand['low'] & freshness['spoiling'], adjustment['high'])
-    ]
+
+    # Demand vs Stock
+    ctrl.Rule(demand['high'] & stock['low'], reorder['high']),
+    ctrl.Rule(demand['medium'] & stock['low'], reorder['medium']),
+    ctrl.Rule(demand['low'] & stock['high'], reorder['low']),
+
+    # HIGH STOCK CASE (MISSING → CAUSED YOUR ERROR)
+    ctrl.Rule(stock['high'] & demand['high'], reorder['medium']),
+    ctrl.Rule(stock['high'] & demand['medium'], reorder['low']),
+    ctrl.Rule(stock['high'] & demand['low'], reorder['low']),
+
+    # Balanced
+    ctrl.Rule(stock['adequate'] & demand['medium'], reorder['medium']),
+    ctrl.Rule(stock['adequate'] & demand['high'], reorder['high']),
+    ctrl.Rule(stock['adequate'] & demand['low'], reorder['low']),
+
+    # Freshness rules
+    ctrl.Rule(freshness['spoiling'], adjustment['high']),
+    ctrl.Rule(freshness['fresh'], adjustment['low']),
+
+    # Combined conditions
+    ctrl.Rule(stock['low'] & freshness['spoiling'], adjustment['high']),
+    ctrl.Rule(stock['adequate'] & freshness['fresh'], adjustment['low']),
+]
 
     system = ctrl.ControlSystem(rules)
     return ctrl.ControlSystemSimulation(system)
