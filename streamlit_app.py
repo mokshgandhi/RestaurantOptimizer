@@ -59,7 +59,7 @@ if st.button("🚀 Run Optimization"):
     # STEP 1: Demand Prediction
     # ---------------------------
     try:
-        demand = float(predict_demand(model, day, weather))
+        demand = predict_demand(model, day, weather)
     except Exception as e:
         st.error(f"Demand prediction failed: {str(e)}")
         st.stop()
@@ -76,7 +76,7 @@ if st.button("🚀 Run Optimization"):
         st.stop()
 
     # ---------------------------
-    # STEP 3: Build Fuzzy System (NO CACHE)
+    # STEP 3: Build Fuzzy System
     # ---------------------------
     fuzzy = build_fuzzy_system()
 
@@ -213,4 +213,4 @@ if st.button("🚀 Run Optimization"):
         st.success("ACO successfully reduced cost 🎯")
 
 else:
-    st.info("👈 Set inputs from sidebar and click 'Run Optimization'")
+    st.info("👈 Set inputs and click 'Run Optimization'")
