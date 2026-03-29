@@ -26,4 +26,11 @@ def train_model(df):
 
 def predict_demand(model, day, weather):
     weather_map = {"hot": 2, "moderate": 1, "rainy": 0}
-    return model.predict(np.array([[day, weather_map[weather]]]))
+    
+    # Convert input to proper numpy format
+    input_data = np.array([[day, weather_map[weather]]])
+    
+    prediction = model.predict(input_data)
+    
+    # Ensure scalar output
+    return float(prediction[0])
