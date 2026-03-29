@@ -60,32 +60,31 @@ def load_fuzzy():
 # ---------------------------
 if st.button("🚀 Run Optimization"):
 
-    fuzzy = load_fuzzy()
-
-    # Step 1: Demand Prediction
-    demand = predict_demand(model, day, weather)
-
-    # Step 2: Fuzzy Logic
-    fuzzy.input['demand'] = demand
-    fuzzy.input['stock'] = sum(stock.values())
-    fuzzy.input['freshness'] = freshness
-    fuzzy.compute()
-
+    # Rebuild fuzzy system every run
+    fuzzy = build_fuzzy_system()
+    
+    # Validate inputs
+    if demand is None or sum(stock.values()) == 0:
+        st.error("Invalid inputs for fuzzy system")
+        st.stop()
+    
+    # Assign inputs safely
+    fuzzy.input['demand'] = float(demand)
+    fuzzy.input['stock'] = float(sum(stock.values()))
+    fuzzy.input['freshness'] = float(freshness)
+    
+    # Debug
+    st.write("Inputs →", demand, sum(stock.values()), freshness)
+    
+    # Compute
+    try:
+        fuzzy.compute()
+    except Exception as e:
+        st.error(f"Fuzzy Error: {str(e)}")
+        st.stop()
+    
     reorder = fuzzy.output['reorder']
     adjustment = fuzzy.output['adjustment']
-
-    # Step 3: Recipe Processing
-    base_recipe = RECIPES[recipe_name]
-
-    substituted_recipe = substitute_ingredients(base_recipe, stock)
-    adjusted_recipe = apply_fuzzy_adjustment(substituted_recipe, adjustment)
-
-    # Step 4: ACO Optimization
-    cost_map = {k: INGREDIENTS[k]['cost'] for k in INGREDIENTS}
-    aco = ACORecipeOptimizer(list(adjusted_recipe.keys()), cost_map)
-
-    optimized_recipe, score = aco.optimize(adjusted_recipe, stock)
-
     # ---------------------------
     # DISPLAY RESULTS
     # ---------------------------
