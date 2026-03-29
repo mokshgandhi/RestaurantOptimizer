@@ -2,14 +2,6 @@
 
 from config import SUBSTITUTES
 
-def adjust_recipe(recipe, adjustment):
-    adjusted = {}
-    
-    for ing, qty in recipe.items():
-        adjusted[ing] = max(10, qty * (1 - adjustment * 0.4))
-    
-    return adjusted
-
 def substitute_ingredients(recipe, stock):
     new_recipe = recipe.copy()
     
@@ -20,3 +12,10 @@ def substitute_ingredients(recipe, stock):
                 new_recipe[sub] = new_recipe.pop(ing)
     
     return new_recipe
+
+
+def apply_fuzzy_adjustment(recipe, adjustment):
+    adjusted = {}
+    for ing, qty in recipe.items():
+        adjusted[ing] = max(10, qty * (1 - adjustment * 0.4))
+    return adjusted
