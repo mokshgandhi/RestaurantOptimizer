@@ -44,14 +44,14 @@ recipe_name = st.sidebar.selectbox("Select Recipe", list(RECIPES.keys()))
 # ---------------------------
 # LOAD MODELS (CACHED)
 # ---------------------------
-@st.cache_resource
+@st.cache_data 
 def load_model():
     df = generate_data()
     return train_model(df)
 
 model = load_model()
 
-@st.cache_resource
+@st.cache_data
 def load_fuzzy():
     return build_fuzzy_system()
 
