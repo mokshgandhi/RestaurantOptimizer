@@ -2,6 +2,7 @@
 
 from sklearn.ensemble import RandomForestRegressor
 import pandas as pd
+import numpy as np
 
 def preprocess(df):
     df = df.copy()
@@ -25,4 +26,4 @@ def train_model(df):
 
 def predict_demand(model, day, weather):
     weather_map = {"hot": 2, "moderate": 1, "rainy": 0}
-    return model.predict([[day, weather_map[weather]]])[0]
+    return model.predict(np.array([[day, weather_map[weather]]]))
