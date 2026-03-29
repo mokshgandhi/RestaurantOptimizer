@@ -110,8 +110,8 @@ if st.button("🚀 Run Optimization"):
         st.error(f"Fuzzy computation failed: {str(e)}")
         st.stop()
 
-    reorder = fuzzy.output['reorder']
-    adjustment = fuzzy.output['adjustment']
+    reorder = fuzzy.output.get('reorder', 0)
+    adjustment = fuzzy.output.get('adjustment', 0)
 
     # ---------------------------
     # STEP 6: Recipe Processing
